@@ -25,21 +25,14 @@ class BoardPosition:
 def fitness(chromosome = None):
 	"""
 	returns 28 - <number of conflicts>
-	to test for conflicts, we check for 
+	to test for conflicts, check for 
 	 -> row conflicts
 	 -> columnar conflicts
 	 -> diagonal conflicts
 	 
-	The ideal case can yield upton 28 arrangements of non attacking pairs.
-	for iteration 0 -> there are 7 non attacking queens
-	for iteration 1 -> there are 6 no attacking queens ..... and so on 
-	Therefore max fitness = 7 + 6+ 5+4 +3 +2 +1 = 28
-	hence fitness val returned will be 28 - <number of clashes>
+	fitness value returned will be 28 - <number of clashes>
 	"""
 
-	# calculate row and column clashes
-	# just subtract the unique length of array from total length of array
-	# [1,1,1,2,2,2] - [1,2] => 4 clashes
 	clashes = 0;
 	row_col_clashes = abs(len(chromosome) - len(np.unique(chromosome)))
 	clashes += row_col_clashes
@@ -52,7 +45,6 @@ def fitness(chromosome = None):
 				dy = abs(chromosome[i] - chromosome[j])
 				if(dx == dy):
 					clashes += 1
-
 
 	return 28 - clashes	
 
@@ -80,9 +72,6 @@ def generatePopulation(population_size = 100):
 def getParent():
 	globals()	
 	parent1, parent2 = None, None
-	# parent is decided by random probability of survival.
-	# since the fitness of each board position is an integer >0, 
-	# we need to normaliza the fitness in order to find the solution
 	
 	summation_fitness = np.sum([x.fitness for x in population])
 	for each in population:
@@ -130,12 +119,7 @@ def reproduce_crossover(parent1, parent2):
 
 
 def mutate(child):
-	"""	
-	- according to genetic theory, a mutation will take place
-	when there is an anomaly during cross over state
-	- since a computer cannot determine such anomaly, we can define 
-	the probability of developing such a mutation 
-	"""
+	
 	if child.survival < MUTATE:
 		c = np.random.randint(8)
 		child.sequence[c] = np.random.randint(8)
@@ -147,7 +131,6 @@ def GA(iteration):
 	newpopulation = []
 	for i in range(len(population)):
 		parent1, parent2 = getParent()
-		# print "Parents generated : ", parent1, parent2
 
 		child = reproduce_crossover(parent1, parent2)
 
